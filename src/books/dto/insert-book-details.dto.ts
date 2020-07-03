@@ -5,8 +5,9 @@ export class InsertBookDetailsDto {
   @IsString()
   book_name: string;
 
-  authors: string;
+  @IsString()
+  authors: string[];
 
   @IsOptional()
-  categories: string;
+  categories: string[];
 }

@@ -8,9 +8,9 @@ export class Book extends BaseEntity {
   @Column()
   book_name: string;
 
-  @Column()
-  authors: string;
+  @Column("text", {array: true})
+  authors: string[];
 
-  @Column()
-  categories: string;
+  @Column("text", {array: true})
+  categories: string[];
 }

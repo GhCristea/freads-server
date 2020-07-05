@@ -3,9 +3,9 @@ import { IsOptional, IsNotEmpty, IsString } from 'class-validator';
 export class InsertBookDetailsDto {
   @IsNotEmpty()
   @IsString()
-  book_name: string;
+  title: string;
 
-  @IsString()
+  @IsOptional()
   authors: string[];
 
   @IsOptional()

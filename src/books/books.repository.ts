@@ -2,50 +2,16 @@
 import { Repository, EntityRepository } from 'typeorm';
 import { Book } from './book.entity';
 import { BookDetailsDto } from './dto/search-book.dto';
-import { InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
-import { InsertBookDetailsDto } from './dto/insert-book-details.dto';
+import { InternalServerErrorException } from '@nestjs/common';
 
 @EntityRepository(Book)
 export class BookRepository extends Repository<Book> {
-  
-  //private logger = new Logger();
-  
-  async insertBook(
-    insertBookDetails: InsertBookDetailsDto,
-  ): Promise<Book> {
-    const { book_name , authors, categories } = insertBookDetails;
-
-    const book = new Book();
-    book.book_name = book_name;
-    book.authors = authors;
-    book.categories = categories;
-
-    try {
-      await book.save();
-    } catch (error) {
-      //this.logger.error(`Book upload failed`, error.stack);
-      throw new InternalServerErrorException();
-    }
-
-    return book;
-  }
-
-  async removeBook(id: number): Promise<string>{
-    const book = this.findOne(id);
-    try {
-      (await book).remove();      
-    } catch (error) {
-      new NotFoundException(`the book with id: ${id} cannot be found`);
-    }
-    return `the book with id: ${id} was removed`;
-  }
-
-  async getBooks(bookDetailsDto: BookDetailsDto): Promise<Book[]> {
+  async searchBooks(bookDetailsDto: BookDetailsDto): Promise<Book[]> {
     const { search } = bookDetailsDto;
     const query = this.createQueryBuilder('book');
 
     if (search) {
-      query.where('book.book_name LIKE :search', {
+      query.andWhere('book.title LIKE :search', {
         search: `%${search}%`,
       });
     }
@@ -58,6 +24,16 @@ export class BookRepository extends Repository<Book> {
     }
   }
 
+  async updateRating(rate: number, bookId: number): Promise<number> {
+    rate = parseInt(Object.values(rate)[0] as string);
+    const book = await this.findOne({ id: bookId });
+    const actualRating = book.rating;
 
+    book.rating =
+      (book.ratingCount * actualRating + rate) / (book.ratingCount + 1);
+    book.ratingCount = book.ratingCount + 1;
+
+    await book.save();
+    return book.rating;
+  }
 }
-

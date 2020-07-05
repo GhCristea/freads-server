@@ -3,7 +3,7 @@ import {
   Column,
   PrimaryGeneratedColumn,
   Unique,
-  Entity
+  Entity,
 } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
@@ -18,25 +18,24 @@ export class User extends BaseEntity {
   @Column()
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   name: string;
 
   @Column()
-  private password: string;
+  password: string;
 
-  @Column()
-  private salt: string;
+  @Column({ nullable: true })
+  salt: string;
 
   /**
    * User's book list
    */
-  @Column('int', { array: true })
-  books: number[];
 
-  async generatePassword(password: string): Promise<void> {
-    const salt = await bcrypt.genSalt();
-    this.password = await bcrypt.hash(password, salt);
-  }
+  @Column('int', {
+    array: true,
+    nullable: true,
+  })
+  books: number[];
 
   async validatePassword(password: string): Promise<boolean> {
     const encryptedPassword = await bcrypt.hash(password, this.salt);

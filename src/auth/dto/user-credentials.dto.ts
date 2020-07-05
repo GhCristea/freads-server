@@ -3,7 +3,7 @@ import {
   MinLength,
   IsEmail,
   IsNotEmpty,
-  IsOptional
+  IsOptional,
 } from 'class-validator';
 
 export class UserCredentialsDto {
@@ -18,5 +18,5 @@ export class UserCredentialsDto {
 
   @IsNotEmpty()
   @IsString()
-  password: string;
+  pass: string;
 }

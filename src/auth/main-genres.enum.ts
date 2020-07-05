@@ -1,0 +1,8 @@
+export enum MainGenres {
+  FICTION,
+  NON_FICTION,
+  BIOGRAPHY,
+  SCIENCE,
+  HOROR_THRILLER,
+  KIDS,
+}

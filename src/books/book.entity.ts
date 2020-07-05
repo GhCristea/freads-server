@@ -6,11 +6,17 @@ export class Book extends BaseEntity {
   id: number;
 
   @Column()
-  book_name: string;
+  title: string;
 
-  @Column("text", {array: true})
+  @Column('text', { array: true })
   authors: string[];
 
-  @Column("text", {array: true})
+  @Column('text', { array: true, default: null })
   categories: string[];
+
+  @Column({ type: 'decimal', default: 0.0 })
+  rating: number;
+
+  @Column({ type: 'int', default: 0 })
+  ratingCount: number;
 }

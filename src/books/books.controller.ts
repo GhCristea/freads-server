@@ -1,37 +1,57 @@
-import { Controller, Get, Post, Body, Param, ParseIntPipe, Delete, Query, ValidationPipe, Logger } from '@nestjs/common';
-import { BooksService } from './books.service';
-// import { BookDetailsDto } from './dto/search-book.dto';
-import { Book } from './book.entity';
-import { InsertBookDetailsDto } from './dto/insert-book-details.dto';
-import { BookDetailsDto } from './dto/search-book.dto';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Query,
+  ValidationPipe,
+  Post,
+  Body,
+  Patch,
+  Put,
+} from '@nestjs/common';
 
-@Controller('books')
+import { BooksService } from './books.service';
+import { Book } from './book.entity';
+import { BookDetailsDto } from './dto/search-book.dto';
+import { InsertBookDetailsDto } from './dto/insert-book-details.dto';
+import { Logger } from '@nestjs/common';
+
+@Controller()
 export class BooksController {
   //
   constructor(private booksService: BooksService) {}
 
-  @Post(':insert')
-  insertBook(@Body() insertBookDto: InsertBookDetailsDto): Promise<Book> {
-    return this.booksService.insertBook(insertBookDto);
-  }
-
   @Get()
-  getAllBooks(){
+  getAllBooks() {
     return this.booksService.getAllBooks();
   }
 
-  @Get(':search')
-  getBooks(@Query(ValidationPipe) bookDetails:BookDetailsDto): Promise<Book[]>{
-    return this.booksService.getBooks(bookDetails);
-  }
-
-  @Delete(':id')
-  removeBook(@Param('id', ParseIntPipe) id: number): Promise<string>{
-    return this.booksService.removeBook(id);
+  @Get('/search')
+  getBooks(
+    @Query(ValidationPipe) bookDetails: BookDetailsDto,
+  ): Promise<Book[]> {
+    return this.booksService.searchBooks(bookDetails);
   }
 
   @Get(':id')
-  getBook(@Param('id', ParseIntPipe) id: number): Promise<Book>{
+  async getBook(@Param('id', ParseIntPipe) id: number): Promise<Book> {
     return this.booksService.getBookById(id);
+  }
+
+  @Post('/insert')
+  async insertBook(@Body() insertBookDto: InsertBookDetailsDto): Promise<Book> {
+    return this.booksService.insertBook(insertBookDto);
+  }
+
+  @Patch('/:bookId/rating')
+  async updateRating(
+    @Body() rating: number,
+    @Param('bookId') bookId: number,
+  ): Promise<number> {
+    const logger = new Logger();
+    logger.log('Rating in controller');
+    logger.log(rating);
+    return this.booksService.updateRating(rating, bookId);
   }
 }

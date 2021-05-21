@@ -1,3 +1,4 @@
+Little API for book-list, built on top of NestJS 
 ## Installation
 
 ```bash

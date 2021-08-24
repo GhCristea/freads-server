@@ -24,7 +24,7 @@ $ npm run start:prod
    # GET:
 
 ```bash
-/  - list all books
+#list all books
 
 /:id 
 #get book with ID = id

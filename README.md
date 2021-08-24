@@ -19,26 +19,29 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-### Requets
+## Requets
 
-    GET:
+   # GET:
 
-```
+```bash
 /  - list all books
 
-/:id - get book with ID = id
+/:id 
+#get book with ID = id
 
-/search?search=some - list all books with title containing "some"
+/search?search=some 
+#list all books with title containing "some"
 ```
 
-    POST:
+   # POST:
 
-```
+```bash
     /insert?title=title&authors=author1,author2,...&category=category1,category2
+    #insert book
 ```
 
-    PATCH:
+   # PATCH:
 
-```
+```bash
     /:bookId/rating?rate?rating=5 //rate book with ID = bookId
 ```

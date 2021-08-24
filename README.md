@@ -43,5 +43,6 @@ $ npm run start:prod
    # PATCH:
 
 ```bash
-    /:bookId/rating?rate?rating=5 //rate book with ID = bookId
+    /:bookId/rating?rate?rating=5 
+    #rate book with ID = bookId
 ```

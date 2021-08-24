@@ -1,6 +1,6 @@
-import { IsString, IsArray, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
-export class BookDetailsDto {
+export class BookSearchDto {
   // @IsString()
   // name: string;
 

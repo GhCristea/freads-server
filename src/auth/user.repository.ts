@@ -1,22 +1,22 @@
 import { Repository, EntityRepository } from 'typeorm';
 import { User } from './user.entity';
 import { UserCredentialsDto } from './dto/user-credentials.dto';
-import { InternalServerErrorException, Logger } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import { InternalServerErrorException } from '@nestjs/common';
+import { genSalt, hash } from 'bcrypt';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
   //
 
   async signUp(userCred: UserCredentialsDto): Promise<string> {
-    const { username, email, pass } = userCred;
+    const { username, email, password: pass } = userCred;
     const user = new User();
     user.name = username || null;
     user.email = email;
 
-    const salt = await bcrypt.genSalt();
+    const salt = await genSalt();
     user.salt = salt;
-    user.password = await bcrypt.hash(pass, salt);
+    user.password = await hash(pass, salt);
 
     try {
       await user.save();
@@ -31,9 +31,9 @@ export class UserRepository extends Repository<User> {
 
   //refference: official NestJS Documentation --> https://docs.nestjs.com/techniques/authentication#login-route
   async validateUser(userCred: UserCredentialsDto): Promise<boolean> {
-    const { email, pass } = userCred;
+    const { email, password } = userCred;
     const user = await this.findOne({ email });
-    if (user && (await user.validatePassword(pass))) {
+    if (user && (await user.validatePassword(password))) {
       return true;
     }
     return false;
@@ -58,7 +58,7 @@ export class UserRepository extends Repository<User> {
 
   async removeBook(userCred: UserCredentialsDto, bookId: number) {
     const { email } = userCred;
-    const user = await this.findOne({ email: email });
+    const user = await this.findOne({ email });
     const bookIndex = user.books.indexOf(bookId);
     if (bookIndex !== -1) {
       user.books.splice(bookIndex);

@@ -8,14 +8,11 @@ import {
   Post,
   Body,
   Patch,
-  Put,
 } from '@nestjs/common';
 
 import { BooksService } from './books.service';
-import { Book } from './book.entity';
-import { BookDetailsDto } from './dto/search-book.dto';
-import { InsertBookDetailsDto } from './dto/insert-book-details.dto';
-import { Logger } from '@nestjs/common';
+import { BookSearchDto } from './dto/search-book.dto';
+import { BookDetailsDto } from './dto/insert-book-details.dto';
 
 @Controller()
 export class BooksController {
@@ -28,30 +25,22 @@ export class BooksController {
   }
 
   @Get('/search')
-  getBooks(
-    @Query(ValidationPipe) bookDetails: BookDetailsDto,
-  ): Promise<Book[]> {
-    return this.booksService.searchBooks(bookDetails);
+  getBooks(@Query(ValidationPipe) searchParams: BookSearchDto) {
+    return this.booksService.searchBooks(searchParams);
   }
 
   @Get(':id')
-  async getBook(@Param('id', ParseIntPipe) id: number): Promise<Book> {
+  async getBook(@Param('id', ParseIntPipe) id: number) {
     return this.booksService.getBookById(id);
   }
 
   @Post('/insert')
-  async insertBook(@Body() insertBookDto: InsertBookDetailsDto): Promise<Book> {
-    return this.booksService.insertBook(insertBookDto);
+  async insertBook(@Body() newBook: BookDetailsDto) {
+    return this.booksService.insertBook(newBook);
   }
 
   @Patch('/:bookId/rating')
-  async updateRating(
-    @Body() rating: number,
-    @Param('bookId') bookId: number,
-  ): Promise<number> {
-    const logger = new Logger();
-    logger.log('Rating in controller');
-    logger.log(rating);
+  async updateRating(@Body() rating: number, @Param('bookId') bookId: number) {
     return this.booksService.updateRating(rating, bookId);
   }
 }

@@ -7,8 +7,8 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { BookRepository } from './books.repository';
 import { Book } from './book.entity';
-import { BookDetailsDto } from './dto/search-book.dto';
-import { InsertBookDetailsDto } from './dto/insert-book-details.dto';
+import { BookSearchDto } from './dto/search-book.dto';
+import { BookDetailsDto } from './dto/insert-book-details.dto';
 
 @Injectable()
 export class BooksService {
@@ -16,24 +16,24 @@ export class BooksService {
     @InjectRepository(BookRepository) private bookRepository: BookRepository,
   ) {}
 
-  getAllBooks(): Promise<Book[]> {
+  getAllBooks() {
     const query = this.bookRepository.createQueryBuilder('book');
     return query.getMany();
   }
 
-  async searchBooks(bookDetails: BookDetailsDto): Promise<Book[]> {
-    return this.bookRepository.searchBooks(bookDetails);
+  async searchBooks(searchParams: BookSearchDto) {
+    return this.bookRepository.searchBooks(searchParams);
   }
 
-  async getBookById(id: number): Promise<Book> {
+  async getBookById(id: number) {
     return this.bookRepository.findOne({ id: id });
   }
 
-  async insertBook(insertBookDetails: InsertBookDetailsDto): Promise<Book> {
-    const { title: book_name, authors, categories } = insertBookDetails;
+  async insertBook(newBook: BookDetailsDto) {
+    const { title, authors, categories } = newBook;
 
     const book = new Book();
-    book.title = book_name;
+    book.title = title;
     book.authors = authors;
     book.categories = categories;
 
@@ -46,10 +46,7 @@ export class BooksService {
     return book;
   }
 
-  async updateRating(rate: number, bookId: number): Promise<number> {
-    const logger = new Logger();
-    logger.log('rate in the service: ');
-    logger.log(rate);
+  async updateRating(rate: number, bookId: number) {
     return this.bookRepository.updateRating(rate, bookId);
   }
 }

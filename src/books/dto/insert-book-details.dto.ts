@@ -1,6 +1,6 @@
 import { IsOptional, IsNotEmpty, IsString } from 'class-validator';
 
-export class InsertBookDetailsDto {
+export class BookDetailsDto {
   @IsNotEmpty()
   @IsString()
   title: string;

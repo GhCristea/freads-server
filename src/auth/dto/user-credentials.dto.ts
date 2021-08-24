@@ -18,5 +18,5 @@ export class UserCredentialsDto {
 
   @IsNotEmpty()
   @IsString()
-  pass: string;
+  password: string;
 }

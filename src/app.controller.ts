@@ -7,7 +7,7 @@ export class AppController {
   constructor(private readonly bookService: BooksService) {}
 
   @Get()
-  async getAllBooks(): Promise<Book[]> {
+  async getAllBooks() {
     return this.bookService.getAllBooks();
   }
 }
